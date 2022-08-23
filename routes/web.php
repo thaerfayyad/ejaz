@@ -55,3 +55,20 @@ Route::prefix('dashboard')->middleware('auth:admin')->group(function () {
     Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
 });
 /*******************************End dashboard Routes********************************************* */
+Route::get('/foo', function () {
+    Artisan::call('cache:clear');
+    Artisan::call('config:clear');
+    Artisan::call('optimize:clear');
+    Artisan::call('optimize');
+    Artisan::call('event:clear');
+    Artisan::call('clear-compiled');
+    Artisan::call('route:clear');
+    Artisan::call('view:clear');
+    Artisan::call('storage:link');
+});
+
+
+Route::get('/down', function () {
+    Artisan::call('down');
+
+});
