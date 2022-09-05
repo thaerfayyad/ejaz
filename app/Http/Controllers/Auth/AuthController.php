@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 use Illuminate\Support\MessageBag;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -27,13 +28,13 @@ class AuthController extends Controller
 
         if (!$validator->fails()) {
             $credentials = ['email' => $request->input('email'), 'password' => $request->input('password')];
-            if (Auth::guard('admin')->attempt($credentials )) {
+            if (Auth::guard('web')->attempt($credentials )) {
                 return response()->json([
                     'message' => 'Logged in successfully'
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
-                    'message' => "Error credentials, check and try again"
+                    'message' => "يوجد خطئ في البيانات يرجا محاولة مرة اخرى"
                 ], Response::HTTP_BAD_REQUEST);
             }
         } else {
@@ -43,15 +44,42 @@ class AuthController extends Controller
         }
 
     }
+    public function store(Request $request)
+    {
+        $validator = Validator($request->all(), [
+            'name' => 'required|string|min:3|max:45',
+            'email' => 'required|email',            
+            'password' => 'required'
+        ]);
+        if (!$validator->fails()) {
+
+
+            $isSaved = User::create([
+                'name' => $request->input('name'),
+                'email' => $request->input('name'),
+                'type' => 'user',
+                'password' =>  bcrypt($request->password),
+            ]);
+            auth()->guard('web')->attempt(['email' => $request->input("email"), 'password' => $request->input("password")]);
+            return response()->json([
+                'message' => $isSaved ? 'Created successfully' : 'Create Failed'
+            ], $isSaved ? Response::HTTP_CREATED : Response::HTTP_BAD_REQUEST);
+        } else {
+            return response()->json([
+                'message' =>   $validator->getMessageBag()->first()
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+    }
 
 
 
     public function logout(Request $request)
     {
-        //auth('admin')->logout();
-        Auth::guard('admin')->logout();
+        auth('web')->logout();
+        // Auth::guard('web')->logout();
         $request->session()->invalidate();
-        return redirect()->route('auth.login-show');
+        return redirect()->route('home');
 
     }
 }

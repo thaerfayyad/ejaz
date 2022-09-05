@@ -1,5 +1,5 @@
 @extends('layout.main')
-@section('title', 'الخدمات')
+@section('title', 'المستخدمين')
 @section('css')
 @section('content')
 
@@ -28,7 +28,7 @@
 
 
                             <!--begin::Add customer-->
-                            <a href="{{ route('services.create') }}"   class="btn btn-primary"
+                            <a href="{{ route('users.create') }}"   class="btn btn-primary"
                                 data-bs-target="#kt_modal_add_customer"> اضافة  </a>
                             <!--end::Add customer-->
                         </div>
@@ -46,9 +46,9 @@
                         <thead>
                             <tr class="fw-bolder fs-6 text-gray-800 px-7">
                                 <th> الرقم # </th>
-                                <th>الصورة</th>
-                                <th>العنوان</th>
-                                <th>مسمى الوظيفة</th>
+                                <th>الاسم</th>
+                                <th>الايميل</th>
+                                
                                 <th>أنشئ بتاريخ</th>
                                 <th> العمليات</th>
 
@@ -59,18 +59,13 @@
                             @forelse ($datas as  $data)
                                 <tr>
                                     <td> {{ $loop->iteration }}</td>
-                                    <td>
-
-                                        <img src="{{ $data->image_path }}" alt="" width="150px">
-                                    </td>
-                                    <td> {{ $data->title }} </td>
-                                    <td> {{ $data->type }} </td>
-
+                                    <td>{{ $data->name }}  </td>
+                                    <td> {{ $data->email }} </td>                              
 
 
                                     <td>{{ $data->created_at->diffForHumans() }}</td>
                                     <td>
-                                        <a href="{{ route('services.edit', $data->id) }}"
+                                        <a href="{{ route('users.edit', $data->id) }}"
                                             class="btn btn-icon btn-info"><i class="las la-edit fs-2 me-2"></i></a>
                                         <a href="#" onclick="confirmDestroy('{{ $data->id }}',this)"
                                             class="btn btn-icon btn-danger"><i class="las la-trash fs-2 me-2"></i>
@@ -125,7 +120,7 @@
 
         function destroy(id, reference) {
             //JS - Axios
-            axios.delete('/dashboard/service/'+id)
+            axios.delete('/dashboard/users/'+id)
                 .then(function (response) {
                     // handle success
                     console.log(response);

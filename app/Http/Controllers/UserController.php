@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Service;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 
-class ServiceController extends Controller
+class UserController  extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,8 +19,8 @@ class ServiceController extends Controller
     public function index()
     {
         //
-        $data = Service::all();
-        return response()->view('dashboard.service.index', [
+        $data = User::where('type', 'user')->get();
+        return response()->view('dashboard.user.index', [
             'datas' => $data,
         ]);
     }
@@ -32,7 +33,7 @@ class ServiceController extends Controller
     public function create()
     {
         //
-        return response()->view('dashboard.service.create');
+        return response()->view('dashboard.user.create');
     }
 
     /**
@@ -45,27 +46,20 @@ class ServiceController extends Controller
     {
         //
         $validator = Validator($request->all(), [
-            'title' => 'required|string|min:3|max:45',
-            'image' => 'required',
-            'type' => 'required'
+            'name' => 'required|string|min:3|max:45',
+            'email' => 'required|email',
+            'password' => 'required'
         ]);
         if (!$validator->fails()) {
 
 
-            $service = new Service();
-            $service->title = $request->input('title');
-            $service->type = $request->input('type');
+            $isSaved = User::create([
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'type' => 'user',
+                'password' =>  bcrypt($request->password),
+            ]);
 
-
-
-
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = Carbon::now()->format('Y_m_d_h_i_s') . '_' . $service->title . '.' . $image->getClientOriginalExtension();
-                $request->file('image')->storeAs('/service', $imageName, ['disk' => 'public']);
-                $service->image = 'service/' . $imageName;
-            }
-            $isSaved = $service->save();
             return response()->json([
                 'message' => $isSaved ? 'Created successfully' : 'Create Failed'
             ], $isSaved ? Response::HTTP_CREATED : Response::HTTP_BAD_REQUEST);
@@ -93,11 +87,10 @@ class ServiceController extends Controller
      * @param  \App\Models\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function edit(Service $service)
+    public function edit(User $user)
     {
         //
-        return response()->view('dashboard.service.edit',compact('service'));
-
+        return response()->view('dashboard.user.edit', compact('user'));
     }
 
     /**
@@ -107,31 +100,24 @@ class ServiceController extends Controller
      * @param  \App\Models\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Service $service)
+    public function update(Request $request, User $user)
     {
-        //
         $validator = Validator($request->all(), [
-            'title' => 'required|string|min:3|max:45',
-            'image' => 'required',
-            'type' => 'required'
+            'name' => 'required|string|min:3|max:45',
+            'email' => 'required|email',
+            'password' => 'required'
         ]);
         if (!$validator->fails()) {
 
 
 
-            $service->title = $request->input('title');
-            $service->type = $request->input('type');
+            $user->name = $request->input('name');
+            $user->email = $request->input('email');
+            $user->type = 'user';
+            $user->password =  bcrypt($request->password);
 
 
-
-
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = Carbon::now()->format('Y_m_d_h_i_s') . '_' . $service->title . '.' . $image->getClientOriginalExtension();
-                $request->file('image')->storeAs('/service', $imageName, ['disk' => 'public']);
-                $service->image = 'service/' . $imageName;
-            }
-            $isSaved = $service->save();
+            $isSaved = $user->save();
             return response()->json([
                 'message' => $isSaved ? 'Created successfully' : 'Create Failed'
             ], $isSaved ? Response::HTTP_CREATED : Response::HTTP_BAD_REQUEST);
@@ -148,12 +134,11 @@ class ServiceController extends Controller
      * @param  \App\Models\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
-        $service = Service::find($id);
-        $imageName = $service->value;
-        $deleted = $service->delete();
+
+        $imageName = $user->value;
+        $deleted = $user->delete();
         if ($deleted) Storage::disk('public')->delete($imageName);
         return response()->json([
             'title' => $deleted ? 'تم الحذف بنجاح' : "فشل الحذف",

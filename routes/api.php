@@ -16,22 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
-Route::get("user", [UserApiController::class, 'getList']);
-
-Route::get("user/{id}", [UserApiController::class, 'getItem']);
-
-Route::get('category', [CategoryController::class, 'all']);
-
-Route::get('category/{id}', [CategoryController::class, 'category']);
-
-Route::post('category/add', [CategoryController::class, 'add']);
-
-Route::put('category/edit/{id}', [CategoryController::class, 'edit']);
-
-Route::get('category/search/{string}', [CategoryController::class, 'search']);
-
-Route::delete('category/delete/{string}', [CategoryController::class, 'delete']);

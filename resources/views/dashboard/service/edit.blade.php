@@ -27,7 +27,7 @@
                                     <!--begin::Card header-->
                                     <div class="card-header">
                                         <div class="card-title">
-                                            <h2>اضافة قائمة ماليا</h2>
+                                            <h2> تعديل على الخدمة</h2>
                                         </div>
                                     </div>
 

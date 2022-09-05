@@ -85,7 +85,7 @@
 							<!--begin::Actions-->
 							<div class="text-center">
 								<!--begin::Submit button-->
-								<button  type="button" onclick="login()"    class="btn btn-lg btn-primary w-100 mb-5">
+								<button  type="button" onclick="login()"  class="btn btn-lg btn-primary w-100 mb-5">
 									<span class="indicator-label">Login</span>
 									<span class="indicator-progress">Please wait...
 									<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
