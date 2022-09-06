@@ -83,33 +83,37 @@
                 </ul>
                 <i class="bi bi-list mobile-nav-toggle"></i>
             </nav>
-           <div>
-            @auth
-                @if(Auth::user()->type == 'super-admin')
-                    <a href="{{ route('dashboard.home') }}" class="btn-get-started scrollto mt-0 register "  >
-                        <span>لوحة تحكم </span>
+            <div>
+                @auth
+                    @if (Auth::user()->type == 'super-admin')
+                        <a href="{{ route('dashboard.home') }}" class="btn-get-started scrollto mt-0 register ">
+                            <span>لوحة تحكم </span>
+                        </a>
+                    @else
+                        <h6 class="btn-get-started scrollto mt-0 register ">
+                            <span>{{ Auth::user()->name }} مرحبا!</span>
+                        </h6>
+                    @endif
+                @endauth
+
+                @guest
+                    <a href="#" class="btn-get-started scrollto mt-0 login " data-toggle="modal" data-target="#user">
+                        <span>تسجيل الدخول</span>
                     </a>
-                @endif
-            @endauth
-           
-            @guest
-                <a href="#" class="btn-get-started scrollto mt-0 login " data-toggle="modal" data-target="#user">
-                    <span>تسجيل الدخول</span>
-                </a>
-            @endguest
-        
-            @auth
-                <a href="{{ route('auth.logout') }}" class="btn-get-started scrollto mt-0 register "  >
-                    <span>خروج</span>
-                </a>
-            @endauth
-      </div>
-            {{--  <div>
+                @endguest
+
+                @auth
+                    <a href="{{ route('auth.logout') }}" class="btn-get-started scrollto mt-0 register ">
+                        <span>خروج</span>
+                    </a>
+                @endauth
+            </div>
+            {{-- <div>
                 <a href="{{ route('auth.login-show') }}" class="btn-get-started scrollto mt-0 login ">
                     <span>تسجيل الدخول</span>
                 </a>
 
-            </div>  --}}
+            </div> --}}
         </div>
     </header>
     <!-- End Header -->
@@ -712,11 +716,12 @@
                                 <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
                                     aria-labelledby="pills-home-tab">
                                     <div class="form px-4 pt-5">
-                                        <input type="email"  id="email" class="form-control"
+                                        <input type="email" id="email" class="form-control"
                                             placeholder="Email">
                                         <input type="password" id="password" class="form-control"
                                             placeholder="Password">
-                                        <button type="button" onclick="login()"  class="btn btn-success btn-block w-100">تسجيل الدخول</button>
+                                        <button type="button" onclick="login()"
+                                            class="btn btn-success btn-block w-100">تسجيل الدخول</button>
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="pills-profile" role="tabpanel"
@@ -727,13 +732,14 @@
                                         <input type="text" id="name" class="form-control"
                                             placeholder="Name">
 
-                                        <input type="email" id="email"  class="form-control"
-                                            placeholder="Email"> 
+                                        <input type="email" id="email_adress" class="form-control"
+                                            placeholder="Email">
 
                                         <input type="password" id="password" class="form-control"
                                             placeholder="Password">
 
-                                        <button type="button"  onclick="register()" class="btn btn-success btn-block w-100">انشاء حساب جديد</button>
+                                        <button type="button" onclick="register()"
+                                            class="btn btn-success btn-block w-100">انشاء حساب جديد</button>
 
                                     </div>
                                 </div>
@@ -756,44 +762,44 @@
 
     <!-- Template Main JS File -->
     <script src="{{ asset('front/assets/js/main.js') }}"></script>
-    <script src="{{asset('/js/crud.js')}}"></script>
-    <script src="{{asset('/js/axios.js')}}"></script>
-    <script src="{{asset('/js/jquery.js')}}"></script>
-    <script src="{{asset('/js/sweetalert.js')}}"></script>
+    <script src="{{ asset('/js/crud.js') }}"></script>
+    <script src="{{ asset('/js/axios.js') }}"></script>
+    <script src="{{ asset('/js/jquery.js') }}"></script>
+    <script src="{{ asset('/js/sweetalert.js') }}"></script>
 
     <script src="{{ asset('front/assets/plugins/toastr/toastr.min.js') }}"></script>
-   
-   
-       <script>
-           function login(){
-                axios.post('/dashboard/login', {
+
+
+    <script>
+        function login() {
+            axios.post('/dashboard/login', {
                     email: document.getElementById('email').value,
                     password: document.getElementById('password').value,
-        
-        
-                }).then(function (response) {
+
+
+                }).then(function(response) {
                     window.location.href = '/';
                 })
-                    .catch(function (error) {
+                .catch(function(error) {
                     toastr.error(error.response.data.message)
                 });
-           }
-           function register(){
+        }
+
+        function register() {
             axios.post('/dashboard/register', {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-            
-                password: document.getElementById('password').value,
-    
-    
-            }).then(function (response) {
-                window.location.href = '/';
-            })
-                .catch(function (error) {
-                toastr.error(error.response.data.message)
-            });
-       }
-       </script>
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email_adress').value,
+                    password: document.getElementById('password').value,
+
+
+                }).then(function(response) {
+                    window.location.href = '/';
+                })
+                .catch(function(error) {
+                    toastr.error(error.response.data.message)
+                });
+        }
+    </script>
 </body>
 
 </html>

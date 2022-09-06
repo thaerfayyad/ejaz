@@ -62,18 +62,4 @@ Route::prefix('dashboard')->middleware('auth:web')->group(function () {
     Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
 });
 /*******************************End dashboard Routes********************************************* */
-Route::get('/foo', function () {
-    Artisan::call('cache:clear');
-    Artisan::call('config:clear');
-    Artisan::call('optimize:clear');
-    Artisan::call('optimize');
-    Artisan::call('route:clear');
-    Artisan::call('view:clear');
-    Artisan::call('storage:link');
-});
-
-
-Route::get('/down', function () {
-    Artisan::call('down');
-
-});
+ 

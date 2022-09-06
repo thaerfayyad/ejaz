@@ -56,7 +56,7 @@ class AuthController extends Controller
 
             $isSaved = User::create([
                 'name' => $request->input('name'),
-                'email' => $request->input('name'),
+                'email' => $request->input('email'),
                 'type' => 'user',
                 'password' =>  bcrypt($request->password),
             ]);
